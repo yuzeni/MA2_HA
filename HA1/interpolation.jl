@@ -58,4 +58,5 @@ function benchmark_all()
     
 end
 
+println("hallo")
 println("moin")
