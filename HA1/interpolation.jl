@@ -5,9 +5,10 @@ function naiv_inter(x, y, xi)
     @assert(length(x) == length(y))
     size = length(x)
 
-    #      _  i _
-    # A = |      | j
-    #     |_    _|
+    #          i
+    #       ⎡     ⎤
+    # A  =  ⎢     ⎥ j
+    #       ⎣     ⎦
     
     A = Matrix{Float64}(undef, size, size)
 
@@ -17,8 +18,6 @@ function naiv_inter(x, y, xi)
             A[j, i] = x[j] ^ (i - 1)
         end
     end
-
-    A * a = y
 
     # Lösen des LGS
     coeffs = inv(A) * y
@@ -57,6 +56,3 @@ function benchmark_all()
     # naiv_inter
     
 end
-
-println("hallo")
-println("moin")
