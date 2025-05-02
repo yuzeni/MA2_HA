@@ -35,7 +35,7 @@ function interpolate_sin_and_plot_all(n, pos_in_figure)
     x_high_res = range(-10, 12, length=m)
 
     axis = Axis(pos_in_figure,
-                title = "n = $n",
+                title = "N = $n",
                 ylabel = "y",
                 xlabel = "x",
                 limits = ((nothing, nothing), (-5, 5))) # specify y axis-range (keep x axis-range untouched)
@@ -87,8 +87,8 @@ function interpolate_sin_and_plot_error_all(n, pos_in_figure)
     x_high_res = range(-5, 7, length=m)
 
     axis = Axis(pos_in_figure,
-                title = "Fehler bei n = $n Stützstellen",
-                ylabel = L"log_10(y)",
+                title = "Fehler bei N = $n Stützstellen",
+                ylabel = L"log_{10}(y)",
                 xlabel = "x",
                 yscale = log10)
 
