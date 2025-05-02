@@ -184,7 +184,7 @@ function benchmark_and_plot_results_all()
              [naiv_inter_time_ms..., lagrange_inter_time_ms..., newton_inter_time_ms...],
              dodge = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4],
              bar_labels = :y,
-             label_formatter = x-> "$(x) μs",
+             label_formatter = x-> "$(round(x, sigdigits=4)) μs",
              color = colors[[1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4]])
 
     Legend(figure[1,2],
