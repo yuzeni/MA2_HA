@@ -27,10 +27,10 @@ function test_all()
     return nothing
 end
 
-function plot_sin_all(n, pos_in_figure)
+function plot_interp_all(n, pos_in_figure, func, fname)
 
     x = range(0, 2, length=n)
-    y = sin.(x)
+    y = func.(x)
     
     m = 2000 # "sehr hohe Auflösung"
     x_high_res = range(-10, 12, length=m)
@@ -41,9 +41,9 @@ function plot_sin_all(n, pos_in_figure)
                 xlabel = "x",
                 limits = ((nothing, nothing), (-5, 5))) # specify y axis-range (keep x axis-range untouched)
 
-    # sin(xi)
-    lines!(axis, x_high_res, sin.(x_high_res),
-           label=L"sin(x)",
+    # func(xi)
+    lines!(axis, x_high_res, func.(x_high_res),
+           label=latexstring("\$ $(fname)(x)\$"),
            linestyle=:dash,
            linewidth=2)
 
@@ -70,34 +70,34 @@ function plot_sin_all(n, pos_in_figure)
     return nothing
 end
 
-function plot_sin_all()
+function plot_interp_all(func; fname="f")
 
     # create a global figure (we plot stuff into the figure)
     figure = Figure(fontsize=22)
 
-    interpolate_sin_and_plot_all(5, figure[1,1])
-    interpolate_sin_and_plot_all(15, figure[1,2])
-    interpolate_sin_and_plot_all(25, figure[2,1])
-    interpolate_sin_and_plot_all(50, figure[2,2])
+    plot_interp_all(5, figure[1,1], func, fname)
+    plot_interp_all(15, figure[1,2], func, fname)
+    plot_interp_all(25, figure[2,1], func, fname)
+    plot_interp_all(50, figure[2,2], func, fname)
 
     return figure
 end
 
-function plot_sin_error_all(n, pos_in_figure)
+function plot_interp_error_all(n, pos_in_figure, func, fname)
 
     x = range(0, 2, length=n)
-    y = sin.(x)
+    y = func.(x)
     
     m = 2000 # "sehr hohe Auflösung"
     x_high_res = range(-5, 7, length=m)
 
     axis = Axis(pos_in_figure,
-                title = latexstring("\$\\textrm{Fehler} \\quad \\left| p(x) - sin(x) \\right| \\quad \\textrm{bei N = $n Stützstellen}\$"),
-                ylabel = L"\textrm{Fehler} \quad \left| p(x) - sin(x) \right|",
+                title = latexstring("\$\\textrm{Fehler} \\quad \\left| p(x) - $(fname)(x) \\right| \\quad \\textrm{bei N = $n Stützstellen}\$"),
+                ylabel = latexstring("\$\\textrm{Fehler} \\quad \\left| p(x) - $(fname)(x) \\right|\$"),
                 xlabel = "x",
                 yscale = log10)
 
-    naiv_error = abs.(naiv_inter(x, y, x_high_res) - sin.(x_high_res))
+    naiv_error = abs.(naiv_inter(x, y, x_high_res) - func.(x_high_res))
     
     lines!(axis, x_high_res, naiv_error,
            label="Naiv",
@@ -106,7 +106,7 @@ function plot_sin_error_all(n, pos_in_figure)
            colormap=:rainbow1,
            colorrange=(0, 1e-4))
 
-    lagrange_error = abs.(lagrange_inter(x, y, x_high_res) - sin.(x_high_res))
+    lagrange_error = abs.(lagrange_inter(x, y, x_high_res) - func.(x_high_res))
 
     lines!(axis, x_high_res, lagrange_error,
            label="Lagrange",
@@ -116,7 +116,7 @@ function plot_sin_error_all(n, pos_in_figure)
            linestyle=(:dot, :dense),
            colorrange=(0, 1e-4))
 
-    newton_error = abs.(newton_inter(x, y, x_high_res) - sin.(x_high_res))
+    newton_error = abs.(newton_inter(x, y, x_high_res) - func.(x_high_res))
 
     lines!(axis, x_high_res, newton_error,
            label="Newton",
@@ -133,19 +133,19 @@ function plot_sin_error_all(n, pos_in_figure)
     return nothing
 end
 
-function plot_sin_error_all()
+function plot_interp_error_all(func; fname="f")
 
     figure = Figure(fontsize=22)
 
-    plot_sin_error_all(5, figure[1,1])
-    plot_sin_error_all(15, figure[1,2])
-    plot_sin_error_all(25, figure[2,1])
-    plot_sin_error_all(50, figure[2,2])
+    plot_interp_error_all(5, figure[1,1], func, fname)
+    plot_interp_error_all(15, figure[1,2], func, fname)
+    plot_interp_error_all(25, figure[2,1], func, fname)
+    plot_interp_error_all(50, figure[2,2], func, fname)
 
     return figure    
 end
 
-function plot_sin_error_scaling_all()
+function plot_interp_error_scaling_all(func; fname="f")
 
     figure = Figure(fontsize=22)
 
@@ -155,8 +155,8 @@ function plot_sin_error_scaling_all()
     m = 2000 # "sehr hohe Auflösung"
 
     axis = Axis(figure[1,1],
-                title = latexstring("\$\\textrm{Fehler} \\quad \\left| p(x) - sin(x) \\right|_\\infty \\quad x \\in [0, 2] \\quad \\textrm{ beim Erhöhen der Anzahl an Stützstellen N und Auflösung M = $m}\$"),
-                ylabel = L"\textrm{Fehler} \quad \left| p(x) - sin(x) \right|_\infty \quad x \in [0, 2]",
+                title = latexstring("\$\\textrm{Fehler} \\quad \\left| p(x) - $(fname)(x) \\right|_\\infty \\quad x \\in [0, 2] \\quad \\textrm{ beim Erhöhen der Anzahl an Stützstellen N und Auflösung M = $m}\$"),
+                ylabel = latexstring("\$\\textrm{Fehler} \\quad \\left| p(x) - $(fname)(x) \\right|_\\infty \\quad x \\in [0, 2]\$"),
                 xlabel = L"\textrm{Stützstellen N}",
                 xscale = log10,
                 yscale = log10,
@@ -169,13 +169,13 @@ function plot_sin_error_scaling_all()
     for i in 1:N
 
         x = range(0, 2, length=n_values[i])
-        y = sin.(x)
+        y = func.(x)
         
         x_high_res = range(0, 2, length=m)
 
-        naiv_max_error[i] = maximum(abs.(naiv_inter(x, y, x_high_res) - sin.(x_high_res)))
-        lagrange_max_error[i] = maximum(abs.(lagrange_inter(x, y, x_high_res) - sin.(x_high_res)))
-        newton_max_error[i] = maximum(abs.(newton_inter(x, y, x_high_res) - sin.(x_high_res)))
+        naiv_max_error[i] = maximum(abs.(naiv_inter(x, y, x_high_res) - func.(x_high_res)))
+        lagrange_max_error[i] = maximum(abs.(lagrange_inter(x, y, x_high_res) - func.(x_high_res)))
+        newton_max_error[i] = maximum(abs.(newton_inter(x, y, x_high_res) - func.(x_high_res)))
     end
     
     lines!(axis, n_values, naiv_max_error,
@@ -206,12 +206,7 @@ function plot_sin_error_scaling_all()
     return figure
 end
 
-function benchmark_and_plot_results_all(n, pos_in_figure)
-
-    return nothing
-end
-
-function benchmark_and_plot_results_all(m, pos_in_figure)
+function plot_benchmark_all(m, pos_in_figure, func)
     
     naiv_inter_time_ms = zeros(Float64, 4)
     lagrange_inter_time_ms = zeros(Float64, 4)
@@ -221,7 +216,7 @@ function benchmark_and_plot_results_all(m, pos_in_figure)
 
     for i in 1:4
         x = range(0, 2, length=resolutions[i])
-        y = sin.(x)
+        y = func.(x)
         
         x_high_res = range(-5, 7, length=m)
 
@@ -253,12 +248,12 @@ function benchmark_and_plot_results_all(m, pos_in_figure)
     return nothing
 end
 
-function benchmark_and_plot_results_all()
+function plot_benchmark_all(func)
     
     figure = Figure(fontsize=22)
 
-    benchmark_and_plot_results_all(2, figure[1,1])
-    benchmark_and_plot_results_all(2000, figure[1,2])
+    benchmark_and_plot_results_all(2, figure[1,1], func)
+    benchmark_and_plot_results_all(2000, figure[1,2], func)
 
     colors = Makie.wong_colors()
 
