@@ -1,3 +1,4 @@
+using LinearSolve
 
 function naiv_inter(x, y, xi)
     @assert(length(x) == length(y))
