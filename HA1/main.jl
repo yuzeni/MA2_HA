@@ -10,17 +10,17 @@ include("newton_inter.jl")
 function test_all()
     
     # naiv_inter
-    println("testing naiv_inter")
+    println("testing naiv_inter()")
     println("test a: ", @test naiv_inter([0.0, 1, 2, 3], [-5.0, -6, -1, 16], [0.5, 1.5, 2.5]) ≈ [−5.8750, −4.6250, 5.6250])
     println("test b: ", @test naiv_inter([0, 0.5, 1, 1.5, 2, 2.5, 3], [-5.0, -6, -1, 16, 10, 20, 9], [3.5, 5]) ≈ [−551.0, −34305])
     
     # lagrange_inter
-    println("testing lagrange_inter")
+    println("testing lagrange_inter()")
     println("test a: ", @test lagrange_inter([0.0, 1, 2, 3], [-5.0, -6, -1, 16], [0.5, 1.5, 2.5]) ≈ [−5.8750, −4.6250, 5.6250])
     println("test b: ", @test lagrange_inter([0, 0.5, 1, 1.5, 2, 2.5, 3], [-5.0, -6, -1, 16, 10, 20, 9], [3.5, 5]) ≈ [−551.0, −34305])
 
     # newton_inter
-    println("testing newton_inter")
+    println("testing newton_inter()")
     println("test a: ", @test newton_inter([0.0, 1, 2, 3], [-5.0, -6, -1, 16], [0.5, 1.5, 2.5]) ≈ [−5.8750, −4.6250, 5.6250])
     println("test b: ", @test newton_inter([0, 0.5, 1, 1.5, 2, 2.5, 3], [-5.0, -6, -1, 16, 10, 20, 9], [3.5, 5]) ≈ [−551.0, −34305])
 
@@ -50,7 +50,7 @@ function plot_interp_all(n, pos_in_figure, func, fname)
     # Naiv
     lines!(axis, x_high_res, naiv_inter(x, y, x_high_res),
            label=L"p_{naiv}(x)",
-           linewidth=2)
+           linewidth=3)
 
     # Lagrange
     lines!(axis, x_high_res, lagrange_inter(x, y, x_high_res),
@@ -60,7 +60,7 @@ function plot_interp_all(n, pos_in_figure, func, fname)
     # Newton
     lines!(axis, x_high_res, newton_inter(x, y, x_high_res),
            label=L"p_{newton}(x)",
-           linewidth=2)
+           linewidth=3)
 
     
     scatter!(axis, x, y, label="Stützstellen")
@@ -80,7 +80,9 @@ function plot_interp_all(func; fname="f")
     plot_interp_all(25, figure[2,1], func, fname)
     plot_interp_all(50, figure[2,2], func, fname)
 
-    return figure
+    display(GLMakie.Screen(), figure)
+
+    return nothing
 end
 
 function plot_interp_error_all(n, pos_in_figure, func, fname)
@@ -142,7 +144,9 @@ function plot_interp_error_all(func; fname="f")
     plot_interp_error_all(25, figure[2,1], func, fname)
     plot_interp_error_all(50, figure[2,2], func, fname)
 
-    return figure    
+    display(GLMakie.Screen(), figure)
+
+    return nothing
 end
 
 function plot_interp_error_scaling_all(func; fname="f")
@@ -203,7 +207,9 @@ function plot_interp_error_scaling_all(func; fname="f")
 
     axislegend(position = :rb)
 
-    return figure
+    display(GLMakie.Screen(), figure)
+    
+    return nothing
 end
 
 function plot_benchmark_all(m, pos_in_figure, func)
@@ -244,7 +250,7 @@ function plot_benchmark_all(m, pos_in_figure, func)
              bar_labels = :y,
              label_formatter = x-> "$(round(x, sigdigits=3)) μs",
              color = colors[[1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4]])
-    
+
     return nothing
 end
 
@@ -252,8 +258,8 @@ function plot_benchmark_all(func)
     
     figure = Figure(fontsize=22)
 
-    benchmark_and_plot_results_all(2, figure[1,1], func)
-    benchmark_and_plot_results_all(2000, figure[1,2], func)
+    plot_benchmark_all(2, figure[1,1], func)
+    plot_benchmark_all(2000, figure[1,2], func)
 
     colors = Makie.wong_colors()
 
@@ -261,5 +267,7 @@ function plot_benchmark_all(func)
            [PolyElement(polycolor = colors[i]) for i in 1:4],
            ["N = 5", "N = 15", "N = 25", "N = 50"])
 
-    return figure
+    display(GLMakie.Screen(), figure)
+
+    return nothing
 end

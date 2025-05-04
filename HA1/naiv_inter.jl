@@ -2,18 +2,19 @@ using LinearSolve
 
 function naiv_inter(x, y, xi)
     @assert(length(x) == length(y))
-    size = length(x)
+    N = length(x) # Anzahl Stützstellen
+    M = length(xi) # Anzahl Auswertungspunkte
 
     #          i
     #       ⎡     ⎤
     # A  =  ⎢     ⎥ j
     #       ⎣     ⎦
     
-    A = Matrix{Float64}(undef, size, size)
+    A = Matrix{Float64}(undef, N, N)
 
     # Füllen der Matrix mit m_i(x_j) wobei m_i die i-te monomiale Basis ist.
-    for i in 1:size
-        for j in 1:size
+    for i in 1:N
+        for j in 1:N
             A[j, i] = x[j] ^ (i - 1)
         end
     end
@@ -21,13 +22,12 @@ function naiv_inter(x, y, xi)
     # Lösen des LGS
     coeffs = inv(A) * y
 
-    result = Vector{Float64}(undef, length(xi))
-    for i in 1:length(xi)
-        result[i] = 0
-        for j in 1:size
-            result[i] += (xi[i] ^ (j - 1)) * coeffs[j]
+    yi = zeros(Float64, M)
+    for i in 1:M
+        for j in 1:N
+            yi[i] += (xi[i] ^ (j - 1)) * coeffs[j]
         end
     end
     
-    return result
+    return yi
 end
