@@ -216,7 +216,6 @@ function plot_benchmark_all(m, pos_in_figure, func)
     naiv_inter_time_ms = zeros(Float64, 4)
     lagrange_inter_time_ms = zeros(Float64, 4)
     newton_inter_time_ms = zeros(Float64, 4)
-    newton_inter_tan_time_ms = zeros(Float64, 4)
 
     resolutions = [5, 15, 25, 50]
 
@@ -234,9 +233,6 @@ function plot_benchmark_all(m, pos_in_figure, func)
 
         bench_newton_inter = @benchmark newton_inter($x, $y, $x_high_res)
         newton_inter_time_ms[i] = median(bench_newton_inter).time * 1e-3
-        
-        bench_newton_inter = @benchmark newton_inter_tan($x, $y, $x_high_res)
-        newton_inter_tan_time_ms[i] = median(bench_newton_inter).time * 1e-3
     end
 
     colors = Makie.wong_colors()
@@ -244,15 +240,15 @@ function plot_benchmark_all(m, pos_in_figure, func)
     axis = Axis(pos_in_figure,
                 title = "Auswertung des Polynoms an M = $m Stellen",
                 ylabel = "μs",
-                xticks = (1:4, ["Naiv", "Lagrange", "Newton", "Newton Tan"]))
+                xticks = (1:, ["Naiv", "Lagrange", "Newton"]))
     
     barplot!(axis,
-             [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4],
-             [naiv_inter_time_ms..., lagrange_inter_time_ms..., newton_inter_time_ms..., newton_inter_tan_time_ms...],
-             dodge = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4],
+             [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3],
+             [naiv_inter_time_ms..., lagrange_inter_time_ms..., newton_inter_time_ms...],
+             dodge = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4],
              bar_labels = :y,
              label_formatter = x-> "$(round(x, sigdigits=3)) μs",
-             color = colors[[1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4]])
+             color = colors[[1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4]])
 
     return nothing
 end
