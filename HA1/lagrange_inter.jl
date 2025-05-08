@@ -6,7 +6,6 @@ function lagrange_inter(x, y, xi)
     
     #Setzen der Polynome über 3 Schleifen, aussetzen über if Statement
     for i in 1:length(xi)
-        yi[i] = 0
         for j in 1:length(x)
             zähler = 1
             nenner = 1
@@ -18,7 +17,6 @@ function lagrange_inter(x, y, xi)
                 end
             end
         
-            # Polynomes[i,j] = zähler / nenner
             yi[i] += (zähler / nenner) * y[j]
         end
     end

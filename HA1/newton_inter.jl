@@ -1,5 +1,5 @@
 
-function newton_inter(x, y, xi)
+function newton_inter_yunus(x, y, xi)
     @assert(length(x) == length(y))
     N = length(x) # Anzahl Stützstellen
     M = length(xi) # Anzahl Auswertungspunkte
@@ -15,6 +15,8 @@ function newton_inter(x, y, xi)
         end
     end
 
+    return div_diffs
+
     # Auswertung des Polynoms mit Horner-Schema:
     # https://de.wikipedia.org/wiki/Polynominterpolation#Newtonscher_Algorithmus
     yi = Vector{Float64}(undef, M)
@@ -24,6 +26,35 @@ function newton_inter(x, y, xi)
             b = b * (xi[i] - x[j]) + div_diffs[j, j]
         end
         yi[i] = b
+    end
+
+    return yi
+end
+
+function newton_inter_tan(x, y, xi)
+    @assert length(x) == length(y)
+    D = ones(length(x), length(x))
+    D[:, 1] .= y
+    a = ones(length(x))
+    a[1] = D[1, 1]
+    yi = zeros(length(xi))
+    
+    for k=2:length(x) 
+       for j=2:length(x)
+           if(j>=k) 
+              D[j,k]=(D[j,k-1]-D[j-1,k-1])/(x[j]-x[j-k+1]); 
+           end
+       end 
+       a[k]=D[k,k];
+    end
+
+    for i = 1:length(xi)
+        temp = 1
+        yi[i] = a[1]
+        for n = 2:length(x)
+            temp = temp * (xi[i] - x[n - 1])
+            yi[i] = yi[i] + a[n] * temp
+        end
     end
 
     return yi

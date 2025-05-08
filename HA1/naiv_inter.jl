@@ -20,7 +20,8 @@ function naiv_inter(x, y, xi)
     end
 
     # Lösen des LGS
-    coeffs = inv(A) * y
+    # coeffs = inv(A) * y
+    coeffs = A\y
 
     yi = zeros(Float64, M)
     for i in 1:M
