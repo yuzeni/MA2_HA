@@ -15,8 +15,6 @@
 #         end
 #     end
 
-#     return div_diffs
-
 #     # Auswertung des Polynoms mit Horner-Schema:
 #     # https://de.wikipedia.org/wiki/Polynominterpolation#Newtonscher_Algorithmus
 #     yi = Vector{Float64}(undef, M)

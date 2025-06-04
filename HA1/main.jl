@@ -240,7 +240,7 @@ function plot_benchmark_all(m, pos_in_figure, func)
     axis = Axis(pos_in_figure,
                 title = "Auswertung des Polynoms an M = $m Stellen",
                 ylabel = "μs",
-                xticks = (1:, ["Naiv", "Lagrange", "Newton"]))
+                xticks = (1:3, ["Naiv", "Lagrange", "Newton"]))
     
     barplot!(axis,
              [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3],
